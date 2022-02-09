@@ -22,6 +22,7 @@ export default class CurrencyService {
         page
       }
     })
+
     const pricesList: Price[] = result.data.map((p: any) => {
       const { id, symbol, name, image, current_price, price_change_percentage_1h_in_currency } = p
       return {

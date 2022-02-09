@@ -20,7 +20,7 @@ const CryptoCard = ({ label, imgUrl, price, priceChange }: Props) => {
     <Container>
       <Image source={{ uri: imgUrl }} />
       <Label>{label}</Label>
-      <Price style={priceChange > 0 ? priceIncreasedStyle : priceDecreasedStyle}>U$ {price}</Price>
+      <Price style={priceChange >= 0 ? priceIncreasedStyle : priceDecreasedStyle}>U$ {price}</Price>
     </Container>
   )
 }
