@@ -2,24 +2,42 @@ import axios, { AxiosInstance } from 'axios'
 import CryptoCoin from '../models/CryptoCoin'
 import Price from '../models/Price'
 
-const PER_PAGE: number = 15
-
+const CURRENCIES_AMOUNT = 250
+const PER_PAGE = 15
 export default class CurrencyService {
   private _http: AxiosInstance
+  private _prices: Price[]
 
   constructor() {
+    this._prices = []
     this._http = axios.create({
       baseURL: 'https://api.coingecko.com/api/v3',
     })
   }
 
   async getPrices(page: number): Promise<Price[]> {
+    if (page < 1 || page > Math.ceil(CURRENCIES_AMOUNT / PER_PAGE)) {
+      return []
+    }
+
+    if (this._prices.length == 0) {
+      await this._loadPrices()
+    }
+
+    const startIndex = (page - 1) * PER_PAGE
+    const endIndex =
+      startIndex + PER_PAGE < CURRENCIES_AMOUNT
+        ? startIndex + PER_PAGE
+        : CURRENCIES_AMOUNT
+    return this._prices.slice(startIndex, endIndex)
+  }
+
+  private async _loadPrices() {
     const result = await this._http.get('/coins/markets', {
       params: {
         vs_currency: 'usd',
-        per_page: PER_PAGE,
+        per_page: CURRENCIES_AMOUNT,
         price_change_percentage: '1h',
-        page,
       },
     })
 
@@ -42,7 +60,7 @@ export default class CurrencyService {
       }
     })
 
-    return pricesList
+    this._prices = pricesList
   }
 
   async getCrypto(id: string, title: string): Promise<CryptoCoin> {
@@ -68,5 +86,19 @@ export default class CurrencyService {
     }
 
     return crypto
+  }
+
+  filterByName(name: string): Price[] {
+    let filteredPrices: Price[] = []
+
+    if (name) {
+      filteredPrices = this._prices.filter((p) =>
+        p.name.toLowerCase().includes(name.toLowerCase())
+      )
+    }
+
+    return filteredPrices.length < PER_PAGE
+      ? filteredPrices
+      : filteredPrices.slice(0, PER_PAGE)
   }
 }

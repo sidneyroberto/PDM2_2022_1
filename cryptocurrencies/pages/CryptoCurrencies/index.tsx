@@ -10,12 +10,18 @@ import {
 } from 'react-native'
 
 import CryptoCard from '../../components/CryptoCard'
+import Loading from '../../components/Loading'
 import Price from '../../models/Price'
 import { RootStackParamList } from '../../navigation'
 import CurrencyService from '../../services/CurrencyService'
 import { Container, Filter } from './styles'
 
-type CryptoCurrenciesProps = NativeStackScreenProps<RootStackParamList, 'CryptoCurrencies'>
+type CryptoCurrenciesProps = NativeStackScreenProps<
+  RootStackParamList,
+  'CryptoCurrencies'
+>
+
+const currencyService = new CurrencyService()
 
 const CryptoCurrencies = ({ navigation }: CryptoCurrenciesProps) => {
   const [prices, setPrices] = useState<Price[]>([])
@@ -23,8 +29,6 @@ const CryptoCurrencies = ({ navigation }: CryptoCurrenciesProps) => {
   const [pricesLoaded, setPricesLoaded] = useState<boolean>(false)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [filter, setFilter] = useState<string>('')
-
-  const currencyService = new CurrencyService()
 
   const loadPrices = async () => {
     if (!pricesLoaded && !filter) {
@@ -46,11 +50,14 @@ const CryptoCurrencies = ({ navigation }: CryptoCurrenciesProps) => {
   })
 
   const renderPrice: ListRenderItem<Price> = ({ item }) => (
-    <TouchableOpacity 
-      onPress={() => navigation.push('CryptoDetails', { 
-        id: item.id,
-        name: item.name
-        })}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.push('CryptoDetails', {
+          id: item.id,
+          name: item.name,
+        })
+      }
+    >
       <CryptoCard
         label={item.name}
         imgUrl={item.image}
@@ -62,11 +69,7 @@ const CryptoCurrencies = ({ navigation }: CryptoCurrenciesProps) => {
 
   const renderFlatListFooter = () => {
     if (!pricesLoaded) {
-      return (
-        <View style={styles.footer}>
-          <ActivityIndicator />
-        </View>
-      )
+      return <Loading />
     }
 
     return null
@@ -75,10 +78,7 @@ const CryptoCurrencies = ({ navigation }: CryptoCurrenciesProps) => {
   const filterPrices = (filter: string) => {
     setFilter(filter)
     if (filter) {
-      const filteredPrices: Price[] = prices.filter((p) =>
-        p.name.toLowerCase().includes(filter.toLowerCase())
-      )
-
+      const filteredPrices: Price[] = currencyService.filterByName(filter)
       setPricesToBeDisplayed(filteredPrices)
     } else {
       setPricesToBeDisplayed(prices)
@@ -87,24 +87,23 @@ const CryptoCurrencies = ({ navigation }: CryptoCurrenciesProps) => {
 
   return (
     <Container>
-      <Filter value={filter} onChangeText={filterPrices} />
-      <FlatList<Price>
-        data={pricesToBeDisplayed}
-        renderItem={renderPrice}
-        keyExtractor={(item) => item.id}
-        onEndReachedThreshold={0.01}
-        onEndReached={() => setPricesLoaded(false)}
-        ListFooterComponent={renderFlatListFooter}
-      />
+      {prices.length > 0 && (
+        <View>
+          <Filter value={filter} onChangeText={filterPrices} />
+          <FlatList<Price>
+            data={pricesToBeDisplayed}
+            renderItem={renderPrice}
+            keyExtractor={(item) => item.id}
+            onEndReachedThreshold={0.01}
+            onEndReached={() => setPricesLoaded(false)}
+            ListFooterComponent={renderFlatListFooter}
+          />
+        </View>
+      )}
+
+      {prices.length == 0 && <Loading />}
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    alignSelf: 'center',
-    marginVertical: 20,
-  },
-})
 
 export default CryptoCurrencies
