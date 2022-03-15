@@ -8,9 +8,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import AppLoading from 'expo-app-loading'
 import { NavigationContainer } from '@react-navigation/native'
 
+import { RootStackParamList } from './navigation'
 import CryptoCurrencies from './pages/CryptoCurrencies'
+import CryptoDetails from './pages/CryptoDetails'
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator<RootStackParamList>()
 
 const App = () => {
   let [fontsLoaded] = useFonts({
@@ -26,7 +28,14 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Cryptocurrencies" component={CryptoCurrencies} />
+        <Stack.Screen 
+          name="CryptoCurrencies" 
+          component={CryptoCurrencies} 
+          options={{ title: "Crypto Currencies"}}/>
+        <Stack.Screen
+          name="CryptoDetails"
+          component={CryptoDetails}
+          options={({ route }) => ({ title: route.params.name })}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

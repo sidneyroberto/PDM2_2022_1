@@ -1,18 +1,23 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import {
   ActivityIndicator,
   FlatList,
   ListRenderItem,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native'
 
 import CryptoCard from '../../components/CryptoCard'
 import Price from '../../models/Price'
+import { RootStackParamList } from '../../navigation'
 import CurrencyService from '../../services/CurrencyService'
 import { Container, Filter } from './styles'
 
-const CryptoCurrencies = () => {
+type CryptoCurrenciesProps = NativeStackScreenProps<RootStackParamList, 'CryptoCurrencies'>
+
+const CryptoCurrencies = ({ navigation }: CryptoCurrenciesProps) => {
   const [prices, setPrices] = useState<Price[]>([])
   const [pricesToBeDisplayed, setPricesToBeDisplayed] = useState<Price[]>([])
   const [pricesLoaded, setPricesLoaded] = useState<boolean>(false)
@@ -41,12 +46,18 @@ const CryptoCurrencies = () => {
   })
 
   const renderPrice: ListRenderItem<Price> = ({ item }) => (
-    <CryptoCard
-      label={item.name}
-      imgUrl={item.image}
-      price={item.currentPrice}
-      priceChange={item.priceChange}
-    />
+    <TouchableOpacity 
+      onPress={() => navigation.push('CryptoDetails', { 
+        id: item.id,
+        name: item.name
+        })}>
+      <CryptoCard
+        label={item.name}
+        imgUrl={item.image}
+        price={item.currentPrice}
+        priceChange={item.priceChange}
+      />
+    </TouchableOpacity>
   )
 
   const renderFlatListFooter = () => {
