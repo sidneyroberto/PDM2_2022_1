@@ -1,0 +1,48 @@
+const images = [
+  { index: 1, content: require('./1.png') },
+  { index: 2, content: require('./2.png') },
+  { index: 3, content: require('./3.png') },
+  { index: 4, content: require('./4.png') },
+  { index: 5, content: require('./5.png') },
+  { index: 6, content: require('./6.png') },
+  { index: 7, content: require('./7.png') },
+  { index: 8, content: require('./8.png') },
+  { index: 11, content: require('./11.png') },
+  { index: 12, content: require('./12.png') },
+  { index: 13, content: require('./13.png') },
+  { index: 14, content: require('./14.png') },
+  { index: 15, content: require('./15.png') },
+  { index: 16, content: require('./16.png') },
+  { index: 17, content: require('./17.png') },
+  { index: 18, content: require('./18.png') },
+  { index: 19, content: require('./19.png') },
+  { index: 20, content: require('./20.png') },
+  { index: 21, content: require('./21.png') },
+  { index: 22, content: require('./22.png') },
+  { index: 23, content: require('./23.png') },
+  { index: 24, content: require('./24.png') },
+  { index: 25, content: require('./25.png') },
+  { index: 26, content: require('./26.png') },
+  { index: 29, content: require('./29.png') },
+  { index: 30, content: require('./30.png') },
+  { index: 31, content: require('./31.png') },
+  { index: 32, content: require('./32.png') },
+  { index: 33, content: require('./33.png') },
+  { index: 34, content: require('./34.png') },
+  { index: 35, content: require('./35.png') },
+  { index: 36, content: require('./36.png') },
+  { index: 37, content: require('./37.png') },
+  { index: 38, content: require('./38.png') },
+  { index: 39, content: require('./39.png') },
+  { index: 40, content: require('./40.png') },
+  { index: 41, content: require('./41.png') },
+  { index: 42, content: require('./42.png') },
+  { index: 43, content: require('./43.png') },
+  { index: 44, content: require('./44.png') },
+]
+
+export const getWeatherIconUri = (index: number) => {
+  const result = images.filter((i) => i.index == index)
+
+  return result.length > 0 ? result[0].content : require('./not_found.png')
+}

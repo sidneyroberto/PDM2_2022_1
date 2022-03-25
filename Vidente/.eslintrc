@@ -1,0 +1,77 @@
+// 20220318194153
+// https://raw.githubusercontent.com/sidneyroberto/WS_2022_1/main/mongodb-api-example/.eslintrc
+
+{
+  "files": ["*.ts", "*.tsx"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import", "unused-imports"],
+  "rules": {
+    "semi": ["error", "never"],
+    "quotes": [2, "single"],
+    "space-before-blocks": "error",
+    "space-infix-ops": "error",
+    "space-in-parens": ["error", "never"],
+    "prefer-const": "error",
+    "max-len": [
+      "error",
+      {
+        "code": 80
+      }
+    ],
+    "no-duplicate-imports": "error",
+    "max-params": ["error", 4],
+    "max-lines-per-function": ["error", 30],
+    "no-else-return": "error",
+    "@typescript-eslint/indent": ["error", 2],
+    "no-empty": "error",
+    "no-empty-function": "error",
+    "no-redeclare": "error",
+    "no-var": "error",
+    "prefer-arrow-callback": "error",
+    "prefer-template": "error",
+    "require-await": "error",
+    "prefer-destructuring": [
+      "error",
+      {
+        "array": false,
+        "object": true
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "external",
+          "builtin",
+          "internal",
+          "sibling",
+          "parent",
+          "index",
+          "object"
+        ],
+        "newlines-between": "always"
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "always",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ]
+  }
+}
