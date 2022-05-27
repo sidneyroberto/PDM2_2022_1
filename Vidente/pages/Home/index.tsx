@@ -1,9 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import Loading from '../../components/Loading'
 
 import Resume from '../../components/Resume'
+import { UserContext } from '../../context/UserContext'
 import Forecast from '../../models/Forecast'
 import { RootStackParamList } from '../../navigation'
 import ForecastinService from '../../services/ForecastingService'
@@ -30,43 +31,43 @@ const Home = ({ navigation }: Props) => {
 
   const forecastingService = new ForecastinService()
 
+  const { cityCode, cityName } = useContext(UserContext)
+
   const loadForecasts = async () => {
-    if (!areForecastsLoaded) {
-      const forecasts = await forecastingService.getNextForecasts()
-      setNextForecasts(forecasts.length > 0 ? forecasts.slice(1) : forecasts)
-      if (forecasts.length > 0) {
-        setCurrentForecast(forecasts[0])
+    const forecasts = await forecastingService.getNextForecasts(cityCode)
+    setNextForecasts(forecasts.length > 0 ? forecasts.slice(1) : forecasts)
+    if (forecasts.length > 0) {
+      setCurrentForecast(forecasts[0])
+    }
+
+    let max = Number.NEGATIVE_INFINITY,
+      min = Number.POSITIVE_INFINITY
+
+    forecasts.forEach((f) => {
+      if (max < f.temperature) {
+        max = f.temperature
       }
 
-      let max = Number.NEGATIVE_INFINITY,
-        min = Number.POSITIVE_INFINITY
+      if (min > f.temperature) {
+        min = f.temperature
+      }
+    })
 
-      forecasts.forEach((f) => {
-        if (max < f.temperature) {
-          max = f.temperature
-        }
-
-        if (min > f.temperature) {
-          min = f.temperature
-        }
-      })
-
-      setMaxTemperature(max)
-      setMinTemperature(min)
-      setAreForecastsLoaded(true)
-    }
+    setMaxTemperature(max)
+    setMinTemperature(min)
+    setAreForecastsLoaded(true)
   }
 
   useEffect(() => {
     loadForecasts()
-  }, [])
+  }, [cityCode])
 
   return (
     <Container>
       {areForecastsLoaded && (
         <View>
           <Resume
-            cityName='Aquidauana'
+            cityName={cityName}
             currentTemperature={currentForecast.temperature}
             description={currentForecast.description}
             iconNumber={currentForecast.iconNumber}

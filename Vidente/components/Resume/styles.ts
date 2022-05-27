@@ -36,12 +36,12 @@ export const CurrentTemperature = styled.Text`
 
 export const WeatherDescription = styled.Text`
   font-family: 'Nunito_700Bold';
-  font-size: 20px;
+  font-size: 16px;
   text-align: center;
 `
 
 export const OtherTemperatures = styled.Text`
   font-family: 'Nunito_400Regular';
-  font-size: 15px;
+  font-size: 14px;
   text-align: center;
 `

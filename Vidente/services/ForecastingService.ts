@@ -1,25 +1,27 @@
+import { FORECASTING_ENDPOINT, CITY_CODE, API_KEY } from './../config/api'
 import { AxiosInstance } from './../node_modules/axios/index.d'
 import axios from 'axios'
 
 import Forecast, { convertTime } from '../models/Forecast'
+import { API_URL } from '../config/api'
 
 export default class ForecastinService {
   private _http: AxiosInstance
 
   constructor() {
     this._http = axios.create({
-      baseURL: process.env.API_URL,
+      baseURL: API_URL,
     })
   }
 
-  async getNextForecasts(): Promise<Forecast[]> {
+  async getNextForecasts(cityCode: number): Promise<Forecast[]> {
     const forecasts: Forecast[] = []
 
     const response = await this._http.get(
-      `${process.env.FORECASTING_ENDPOINT}/${process.env.CITY_CODE}`,
+      `${FORECASTING_ENDPOINT}/${cityCode}`,
       {
         params: {
-          apikey: process.env.API_KEY,
+          apikey: API_KEY,
           language: 'pt-BR',
           metric: 'true',
         },
